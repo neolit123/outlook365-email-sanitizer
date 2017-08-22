@@ -32,13 +32,15 @@ while (my $row = <$fh>) {
 	$row_remainder = "";
 	if (length($row) > $row_limit && substr($row, 0, 1) ne ">") {
 		my $last_space_idx = 0;
-		for (my $i = 0; $i < length($row); $i++) {
+		my $len = length($row);
+		for (my $i = 0; $i < $len; $i++) {
 			if (substr($row, $i, 1) eq " ") {
 				$last_space_idx = $i;
 			}
 			if ($i > $row_limit && $last_space_idx > 0) {
 				$row_remainder = substr($row, $last_space_idx + 1);
 				$row = substr($row, 0, $last_space_idx);
+				last;
 			}
 		}
 	}
