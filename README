@@ -1,0 +1,44 @@
+converts an outlook365 plain text email message into a "normal" quoted message,
+prefixed with ">". allows you to mid-post or bottom-post instead of only
+top-posting your replies.
+
+this:
+================================================================================
+________________________________________
+From: User Familyname
+Sent: Tuesday, August 22, 2017 8:51 PM
+To: SomeoneTo
+Cc: SomeoneTo
+Subject: Some subject
+
+Hello,
+
+This is a very long sentence positioned on a single line that the perser will try to convert to multiple lines prefixed with ">".
+
+--
+User Familyname
+Position
+Company
+================================================================================
+
+becomes this:
+================================================================================
+On Tuesday, August 22, 2017 8:51 PM, User Familyname wrote:
+> Hello,
+>
+> This is a very long sentence positioned on a single line that the perser will
+> try to convert to multiple lines prefixed with ">".
+>
+> --
+> User Familyname
+> Position
+> Company
+================================================================================
+
+usage:
+- enable "plain text replies" somewhere in the outlook365 settings
+- hit "reply" / "reply all" over an email
+- expand the [...] button with history
+- copy the screen text into a file "email.txt" next to this .pl script
+- call "perl <script-name.pl>"
+- copy the contents of "email.txt" back to the screen
