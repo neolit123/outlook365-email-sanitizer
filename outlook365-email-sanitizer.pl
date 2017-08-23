@@ -82,7 +82,7 @@ while (my $row = <$fh>) {
 			$email_str .= ">" . $row . "\n";
 			next;
 		}
-		$email_str .= "On " . $sent . ", " . $from . " wrote:" . "\n";
+		$email_str .= $from . " wrote on " . $sent . ":\n";
 		$was_subject = 1;
 		next;
 	}
