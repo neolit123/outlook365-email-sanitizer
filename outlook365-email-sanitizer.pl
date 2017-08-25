@@ -57,25 +57,19 @@ while (my $row = <$fh>) {
 		if ($email_str eq "\n") {
 			$email_str = "";
 		}
-		$idx = index($row, ">");
-		if ($idx == 0) {
-			$email_str .= ">" . $row . "\n";
-			next;
-		}
-		$email_str .= $from . " wrote on " . $sent . ":\n";
+		$row = $from . " wrote on " . $sent . ":";
 		$was_subject = 1;
-		next;
 	}
-	if ($was_subject == 1) {
-		$was_subject = 0;
-		next;
-	}
-	if (substr($row, 0, 1) ne ">") {
+	if (substr($row, 0, 1) ne ">" && $row ne "") {
 		my $last_space_idx = -1;
 		my $idx = 0;
+		my $prefix = "> ";
+		if ($was_subject == 1) {
+			$prefix = "";
+		}
 		while (1) {
 			if ($idx > length($row) - 1) {
-				$email_str .= "> " . $row . "\n";
+				$email_str .= $prefix . $row . "\n";
 				last;
 			}
 			if (substr($row, $idx, 1) eq " ") {
@@ -86,7 +80,7 @@ while (my $row = <$fh>) {
 					$idx++;
 					next;
 				}
-				$email_str .= "> " . substr($row, 0, $last_space_idx) . "\n";
+				$email_str .= $prefix . substr($row, 0, $last_space_idx) . "\n";
 				$row = substr($row, $last_space_idx + 1);
 				$last_space_idx = -1;
 				$idx = 0;
@@ -97,6 +91,11 @@ while (my $row = <$fh>) {
 	} else {
 		$email_str .= ">" . $row . "\n";
 	}
+	if ($was_subject == 1) {
+		$was_subject = 0;
+		next;
+	}
+
 }
 close $fh;
 
