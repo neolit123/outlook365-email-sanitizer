@@ -25,25 +25,6 @@ open($fh, "<:encoding(UTF-8)", $filename)
 	or die $err_fopen . "'$filename' $!";
 while (my $row = <$fh>) {
 	chomp($row);
-	$row = $row_remainder . $row;
-	if ($row_remainder ne "") {
-		$row .= "\n>";
-	}
-	$row_remainder = "";
-	if (length($row) > $row_limit && substr($row, 0, 1) ne ">") {
-		my $last_space_idx = 0;
-		my $len = length($row);
-		for (my $i = 0; $i < $len; $i++) {
-			if (substr($row, $i, 1) eq " ") {
-				$last_space_idx = $i;
-			}
-			if ($i > $row_limit && $last_space_idx > 0) {
-				$row_remainder = substr($row, $last_space_idx + 1);
-				$row = substr($row, 0, $last_space_idx);
-				last;
-			}
-		}
-	}
 	my $idx = 0;
 	if ($row ne "") {
 		$first_row_with_text = 1;
@@ -90,11 +71,33 @@ while (my $row = <$fh>) {
 		$was_subject = 0;
 		next;
 	}
-	my $prefix = ">";
-	if (substr($row, 0, 1) ne ">" && $row ne "") {
-		$prefix .= " ";
+	if (substr($row, 0, 1) ne ">") {
+		my $last_space_idx = -1;
+		my $idx = 0;
+		while (1) {
+			if ($idx > length($row) - 1) {
+				$email_str .= "> " . $row . "\n";
+				last;
+			}
+			if (substr($row, $idx, 1) eq " ") {
+				$last_space_idx = $idx;
+			}
+			if ($idx > $row_limit) {
+				if ($last_space_idx == -1) {
+					$idx++;
+					next;
+				}
+				$email_str .= "> " . substr($row, 0, $last_space_idx) . "\n";
+				$row = substr($row, $last_space_idx + 1);
+				$last_space_idx = -1;
+				$idx = 0;
+				next;
+			}
+			$idx++;
+		}
+	} else {
+		$email_str .= ">" . $row . "\n";
 	}
-	$email_str .= $prefix . $row . "\n";
 }
 close $fh;
 
