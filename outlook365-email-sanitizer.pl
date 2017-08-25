@@ -93,9 +93,7 @@ while (my $row = <$fh>) {
 	}
 	if ($was_subject == 1) {
 		$was_subject = 0;
-		next;
 	}
-
 }
 close $fh;
 
