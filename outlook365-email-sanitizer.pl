@@ -19,7 +19,6 @@ my $in_header = 0;
 my $first_row_with_text = 0;
 my $first_line = 0;
 my $row_limit = 76;
-my $row_remainder = "";
 
 open($fh, "<:encoding(UTF-8)", $filename)
 	or die $err_fopen . "'$filename' $!";
